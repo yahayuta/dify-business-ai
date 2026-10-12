@@ -1,0 +1,77 @@
+{
+ "date": "2026-10-12",
+ "where": "n8n Cloud (production webhook) -> Dify Cloud inquiry-triage, gemini-3.5-flash",
+ "results": [
+  {
+   "id": "T001",
+   "message": "Hi, where is my order ORD-10234? It was supposed to arrive yesterday.",
+   "routed": "order_status",
+   "order_id": "ORD-10234",
+   "sentiment": "neutral",
+   "issues": "",
+   "latency_ms": 4386
+  },
+  {
+   "id": "T012",
+   "message": "I returned the item last week and still haven't received my refund. Order 10877.",
+   "routed": "return_refund",
+   "order_id": "ORD-10877",
+   "sentiment": "negative",
+   "issues": "",
+   "latency_ms": 4198
+  },
+  {
+   "id": "T030",
+   "message": "Could you send me an invoice for ORD-10901? Thanks in advance!",
+   "routed": "order_status",
+   "order_id": "ORD-10901",
+   "sentiment": "neutral",
+   "issues": "",
+   "latency_ms": 7127,
+   "note": "labelled payment_issue; same miss as in the 40-ticket eval"
+  },
+  {
+   "id": "T033",
+   "message": "The packaging for order 11777 was excessive, so much plastic. Please do better.",
+   "routed": "complaint",
+   "order_id": "ORD-11777",
+   "sentiment": "negative",
+   "issues": "",
+   "latency_ms": 5654
+  },
+  {
+   "id": "X1",
+   "message": "Same problem as my last order, please fix it like you did before.",
+   "routed": "complaint",
+   "order_id": "",
+   "sentiment": "negative",
+   "issues": "",
+   "latency_ms": 4137
+  },
+  {
+   "id": "X2",
+   "message": "注文番号は前回のメールに書いた通りです。まだ届きません。",
+   "routed": "order_status",
+   "order_id": "",
+   "sentiment": "negative",
+   "issues": "",
+   "latency_ms": 4841
+  },
+  {
+   "id": "R1",
+   "message": "Where is my order ORD-1O234? (typed from my phone, sorry)",
+   "routed": "review_queue",
+   "order_id": "ORD-10234",
+   "sentiment": "neutral",
+   "issues": "order_id ORD-10234 is not in the message"
+  },
+  {
+   "id": "R2",
+   "message": "Order number is twelve thousand three hundred and forty five, please cancel it.",
+   "routed": "review_queue",
+   "order_id": "ORD-12345",
+   "sentiment": "neutral",
+   "issues": "order_id ORD-12345 is not in the message"
+  }
+ ]
+}

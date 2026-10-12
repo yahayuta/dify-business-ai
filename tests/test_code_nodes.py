@@ -139,3 +139,17 @@ def test_dsl_graph_is_connected(dsl):
                 reachable.add(edge["target"])
                 frontier.append(edge["target"])
     assert reachable == ids
+
+
+# ------------------------------------------------------------------ n8n workflow
+
+
+def test_n8n_workflow_is_connected_and_has_no_secrets():
+    wf = json.loads((ROOT / "n8n" / "inquiry-triage-router.json").read_text(encoding="utf-8"))
+    names = {n["name"] for n in wf["nodes"]}
+    targets = {c["node"] for outs in wf["connections"].values() for branch in outs["main"] for c in branch}
+    assert set(wf["connections"]) <= names and targets <= names
+    assert names - targets == {"Inquiry received"}  # the webhook is the only entry point
+    responders = [n for n in wf["nodes"] if n["type"] == "n8n-nodes-base.respondToWebhook"]
+    assert len(responders) == 2  # one per branch of "Needs review?"
+    assert "app-" not in json.dumps(wf)  # the Dify key lives in an n8n credential, never in the export

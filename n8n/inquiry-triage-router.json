@@ -1,0 +1,158 @@
+{
+  "name": "Inquiry triage router (Dify)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "inquiry-triage",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "0b6c1f4e-1a51-4d0e-9a3a-2f6f0c1d0001",
+      "name": "Inquiry received",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "9f2d6a8e-4c1b-4e57-8a0d-3e1c7b5a2f90"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.dify.ai/v1/workflows/run",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ inputs: { message: $json.body.message }, response_mode: 'blocking', user: 'n8n' }) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "0b6c1f4e-1a51-4d0e-9a3a-2f6f0c1d0002",
+      "name": "Dify: inquiry-triage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Dify inquiry-triage app key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "a1", "name": "message", "value": "={{ $('Inquiry received').item.json.body.message }}", "type": "string" },
+            { "id": "a2", "name": "category", "value": "={{ $json.data.outputs.category }}", "type": "string" },
+            { "id": "a3", "name": "order_id", "value": "={{ $json.data.outputs.order_id }}", "type": "string" },
+            { "id": "a4", "name": "sentiment", "value": "={{ $json.data.outputs.sentiment }}", "type": "string" },
+            { "id": "a5", "name": "needs_review", "value": "={{ $json.data.status !== 'succeeded' || $json.data.outputs.needs_review === true }}", "type": "boolean" },
+            { "id": "a6", "name": "issues", "value": "={{ $json.data.status !== 'succeeded' ? 'Dify run ' + $json.data.status + ': ' + ($json.data.error || '') : ($json.data.outputs.issues || '') }}", "type": "string" },
+            { "id": "a7", "name": "dify_run_id", "value": "={{ $json.data.id }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0b6c1f4e-1a51-4d0e-9a3a-2f6f0c1d0003",
+      "name": "Flatten result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.needs_review }}",
+              "rightValue": "",
+              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0b6c1f4e-1a51-4d0e-9a3a-2f6f0c1d0004",
+      "name": "Needs review?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": { "__rl": true, "mode": "name", "value": "review_queue" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "message": "={{ $json.message }}",
+            "category": "={{ $json.category }}",
+            "order_id": "={{ $json.order_id }}",
+            "sentiment": "={{ $json.sentiment }}",
+            "issues": "={{ $json.issues }}",
+            "dify_run_id": "={{ $json.dify_run_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            { "id": "message", "displayName": "message", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "category", "displayName": "category", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "order_id", "displayName": "order_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "sentiment", "displayName": "sentiment", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "issues", "displayName": "issues", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "dify_run_id", "displayName": "dify_run_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0b6c1f4e-1a51-4d0e-9a3a-2f6f0c1d0005",
+      "name": "Add to review queue",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [880, -100]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ routed: 'review_queue', category: $('Flatten result').item.json.category, order_id: $('Flatten result').item.json.order_id, sentiment: $('Flatten result').item.json.sentiment, issues: $('Flatten result').item.json.issues }) }}",
+        "options": {}
+      },
+      "id": "0b6c1f4e-1a51-4d0e-9a3a-2f6f0c1d0006",
+      "name": "Respond: queued for review",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1100, -100]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ routed: $json.category, category: $json.category, order_id: $json.order_id, sentiment: $json.sentiment, issues: '' }) }}",
+        "options": {}
+      },
+      "id": "0b6c1f4e-1a51-4d0e-9a3a-2f6f0c1d0007",
+      "name": "Respond: auto-routed",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [880, 100]
+    }
+  ],
+  "connections": {
+    "Inquiry received": { "main": [[{ "node": "Dify: inquiry-triage", "type": "main", "index": 0 }]] },
+    "Dify: inquiry-triage": { "main": [[{ "node": "Flatten result", "type": "main", "index": 0 }]] },
+    "Flatten result": { "main": [[{ "node": "Needs review?", "type": "main", "index": 0 }]] },
+    "Needs review?": {
+      "main": [
+        [{ "node": "Add to review queue", "type": "main", "index": 0 }],
+        [{ "node": "Respond: auto-routed", "type": "main", "index": 0 }]
+      ]
+    },
+    "Add to review queue": { "main": [[{ "node": "Respond: queued for review", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "pinData": {}
+}
