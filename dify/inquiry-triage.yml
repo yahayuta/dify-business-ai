@@ -1,0 +1,242 @@
+app:
+  description: Route a customer message to a category, extract the order ID and read the sentiment. The LLM answer is validated and normalised in code before it is returned.
+  icon: "📨"
+  icon_background: '#E0F2FE'
+  icon_type: emoji
+  mode: workflow
+  name: inquiry-triage
+  use_icon_as_answer_icon: false
+dependencies: []
+kind: app
+version: 0.7.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload: {}
+    sensitive_word_avoidance:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        sourceType: start
+        targetType: llm
+      id: start-llm
+      source: start
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: llm
+        targetType: code
+      id: llm-validate
+      source: llm
+      sourceHandle: source
+      target: validate
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: code
+        targetType: end
+      id: validate-end
+      source: validate
+      sourceHandle: source
+      target: end
+      targetHandle: target
+      type: custom
+    nodes:
+    - data:
+        title: Start
+        type: start
+        variables:
+        - label: message
+          max_length: 2000
+          required: true
+          type: paragraph
+          variable: message
+      id: start
+      position:
+        x: 80
+        y: 280
+      type: custom
+    - data:
+        title: Triage (LLM)
+        type: llm
+        model:
+          provider: langgenius/gemini/google
+          name: gemini-3.5-flash
+          mode: chat
+          completion_params: {}
+        context:
+          enabled: false
+          variable_selector: []
+        vision:
+          enabled: false
+        variables: []
+        prompt_template:
+        - id: system
+          role: system
+          edition_type: basic
+          text: |-
+            You triage customer support messages for an online shop.
+            Reply with a single JSON object and nothing else.
+
+            Schema:
+            {
+              "category": "order_status" | "cancel_order" | "return_refund" | "address_change" | "product_question" | "payment_issue" | "complaint",
+              "order_id": string matching ORD-<digits>, or null,
+              "sentiment": "positive" | "neutral" | "negative"
+            }
+
+            Rules:
+            1. order_id: write any order number as ORD-<digits> ("#10234" or "order 10234" -> "ORD-10234").
+               If the message contains no order number, use null. Never invent one.
+            2. category: choose what the customer wants us to DO next.
+               - Wants to stop an order that has not arrived -> cancel_order (even if they also mention a refund).
+               - Item received and wants a return, exchange, replacement or refund -> return_refund.
+               - Unhappy about service, staff or packaging, with no concrete request -> complaint.
+               - Delivery timing, tracking or shipping questions -> order_status.
+            3. sentiment: negative if the customer is frustrated or disappointed, positive if they thank or praise us.
+
+            Examples:
+            Message: Where is ORD-20001? It was due Monday.
+            {"category": "order_status", "order_id": "ORD-20001", "sentiment": "neutral"}
+
+            Message: The lamp arrived cracked, I want a refund. Order #20002
+            {"category": "return_refund", "order_id": "ORD-20002", "sentiment": "negative"}
+
+            Message: Do you ship to Okinawa?
+            {"category": "order_status", "order_id": null, "sentiment": "neutral"}
+        - id: user
+          role: user
+          edition_type: basic
+          text: 'Message: {{#start.message#}}'
+      id: llm
+      position:
+        x: 380
+        y: 280
+      type: custom
+    - data:
+        title: Validate and normalise
+        type: code
+        code_language: python3
+        code: |
+          import json
+          import re
+
+          LABELS = {"order_status", "cancel_order", "return_refund", "address_change",
+                    "product_question", "payment_issue", "complaint"}
+          SENTIMENTS = {"positive", "neutral", "negative"}
+
+
+          def _parse(text):
+              text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text.strip())
+              try:
+                  return json.loads(text)
+              except ValueError:
+                  start, end = text.find("{"), text.rfind("}")
+                  if start == -1 or end <= start:
+                      return None
+                  try:
+                      return json.loads(text[start:end + 1])
+                  except ValueError:
+                      return None
+
+
+          def main(llm_text: str, message: str) -> dict:
+              issues = []
+              data = _parse(llm_text)
+              if not isinstance(data, dict):
+                  return {"category": "", "order_id": "", "sentiment": "",
+                          "needs_review": True, "issues": "LLM output was not a JSON object"}
+
+              category = str(data.get("category") or "").strip().lower()
+              if category not in LABELS:
+                  issues.append(f"unknown category: {category or '(empty)'}")
+
+              sentiment = str(data.get("sentiment") or "").strip().lower()
+              if sentiment not in SENTIMENTS:
+                  issues.append(f"unknown sentiment: {sentiment or '(empty)'}")
+
+              raw_id = data.get("order_id")
+              order_id = ""
+              if raw_id not in (None, "", "null"):
+                  digits = re.search(r"\d{4,}", str(raw_id))
+                  if digits:
+                      order_id = f"ORD-{digits.group(0)}"
+                      # Guard against invented IDs: the digits must appear in the message.
+                      if digits.group(0) not in message:
+                          issues.append(f"order_id {order_id} is not in the message")
+                  else:
+                      issues.append(f"unreadable order_id: {raw_id}")
+
+              return {"category": category, "order_id": order_id, "sentiment": sentiment,
+                      "needs_review": bool(issues), "issues": "; ".join(issues)}
+        variables:
+        - variable: llm_text
+          value_selector:
+          - llm
+          - text
+        - variable: message
+          value_selector:
+          - start
+          - message
+        outputs:
+          category:
+            type: string
+            children: null
+          order_id:
+            type: string
+            children: null
+          sentiment:
+            type: string
+            children: null
+          needs_review:
+            type: boolean
+            children: null
+          issues:
+            type: string
+            children: null
+      id: validate
+      position:
+        x: 680
+        y: 280
+      type: custom
+    - data:
+        title: End
+        type: end
+        outputs:
+        - variable: category
+          value_selector:
+          - validate
+          - category
+        - variable: order_id
+          value_selector:
+          - validate
+          - order_id
+        - variable: sentiment
+          value_selector:
+          - validate
+          - sentiment
+        - variable: needs_review
+          value_selector:
+          - validate
+          - needs_review
+        - variable: issues
+          value_selector:
+          - validate
+          - issues
+      id: end
+      position:
+        x: 980
+        y: 280
+      type: custom
+    viewport:
+      x: 0
+      y: 0
+      zoom: 0.8

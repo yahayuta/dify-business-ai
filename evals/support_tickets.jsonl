@@ -1,0 +1,40 @@
+{"id": "T001", "input": "Hi, where is my order ORD-10234? It was supposed to arrive yesterday.", "expected": {"category": "order_status", "order_id": "ORD-10234", "sentiment": "neutral"}, "tags": []}
+{"id": "T002", "input": "Can you tell me when order #10871 will ship?", "expected": {"category": "order_status", "order_id": "ORD-10871", "sentiment": "neutral"}, "tags": ["id_format"]}
+{"id": "T003", "input": "Tracking for order 11002 hasn't updated in 5 days. Is it lost??", "expected": {"category": "order_status", "order_id": "ORD-11002", "sentiment": "negative"}, "tags": ["id_format"]}
+{"id": "T004", "input": "Just checking the delivery date for ORD-12210, thanks a lot!", "expected": {"category": "order_status", "order_id": "ORD-12210", "sentiment": "positive"}, "tags": []}
+{"id": "T005", "input": "My package says delivered but I never got it. Order ORD-10555.", "expected": {"category": "order_status", "order_id": "ORD-10555", "sentiment": "negative"}, "tags": ["ambiguous"]}
+{"id": "T006", "input": "Please cancel ORD-10990, I ordered the wrong size.", "expected": {"category": "cancel_order", "order_id": "ORD-10990", "sentiment": "neutral"}, "tags": []}
+{"id": "T007", "input": "I want to cancel my order before it ships. The number is 11345.", "expected": {"category": "cancel_order", "order_id": "ORD-11345", "sentiment": "neutral"}, "tags": ["id_format"]}
+{"id": "T008", "input": "Cancel order #12003 now. I've been waiting two weeks and I'm done.", "expected": {"category": "cancel_order", "order_id": "ORD-12003", "sentiment": "negative"}, "tags": ["ambiguous"]}
+{"id": "T009", "input": "Is it still possible to cancel? I placed it an hour ago.", "expected": {"category": "cancel_order", "order_id": null, "sentiment": "neutral"}, "tags": ["no_id"]}
+{"id": "T010", "input": "Changed my mind on ORD-10712, could you cancel it please? Thanks!", "expected": {"category": "cancel_order", "order_id": "ORD-10712", "sentiment": "positive"}, "tags": []}
+{"id": "T011", "input": "The jacket from ORD-10450 doesn't fit. How do I return it?", "expected": {"category": "return_refund", "order_id": "ORD-10450", "sentiment": "neutral"}, "tags": []}
+{"id": "T012", "input": "I returned the item last week and still haven't received my refund. Order 10877.", "expected": {"category": "return_refund", "order_id": "ORD-10877", "sentiment": "negative"}, "tags": ["id_format"]}
+{"id": "T013", "input": "Can I exchange the blue mug for a red one? Order #11230", "expected": {"category": "return_refund", "order_id": "ORD-11230", "sentiment": "neutral"}, "tags": ["id_format"]}
+{"id": "T014", "input": "Item arrived broken. I want my money back. ORD-12118", "expected": {"category": "return_refund", "order_id": "ORD-12118", "sentiment": "negative"}, "tags": ["ambiguous"]}
+{"id": "T015", "input": "What is your return policy for sale items?", "expected": {"category": "return_refund", "order_id": null, "sentiment": "neutral"}, "tags": ["no_id"]}
+{"id": "T016", "input": "I moved last week. Can you send ORD-10333 to my new address instead?", "expected": {"category": "address_change", "order_id": "ORD-10333", "sentiment": "neutral"}, "tags": []}
+{"id": "T017", "input": "Wrong apartment number on order 11456, it should be 302 not 203.", "expected": {"category": "address_change", "order_id": "ORD-11456", "sentiment": "neutral"}, "tags": ["id_format"]}
+{"id": "T018", "input": "Please update the shipping address for #12077 before it leaves the warehouse!", "expected": {"category": "address_change", "order_id": "ORD-12077", "sentiment": "neutral"}, "tags": ["id_format"]}
+{"id": "T019", "input": "Can I have my order delivered to my office? I'll be out all day.", "expected": {"category": "address_change", "order_id": null, "sentiment": "neutral"}, "tags": ["no_id"]}
+{"id": "T020", "input": "Thanks for the quick reply earlier! One more thing: please ship ORD-10620 to my parents' house.", "expected": {"category": "address_change", "order_id": "ORD-10620", "sentiment": "positive"}, "tags": []}
+{"id": "T021", "input": "Is the outdoor tent waterproof?", "expected": {"category": "product_question", "order_id": null, "sentiment": "neutral"}, "tags": ["no_id"]}
+{"id": "T022", "input": "Does the 2L water bottle fit in a standard car cup holder?", "expected": {"category": "product_question", "order_id": null, "sentiment": "neutral"}, "tags": ["no_id"]}
+{"id": "T023", "input": "Love the notebooks! Do you sell refills for the A5 size?", "expected": {"category": "product_question", "order_id": null, "sentiment": "positive"}, "tags": ["no_id"]}
+{"id": "T024", "input": "When will the grey hoodie be back in stock?", "expected": {"category": "product_question", "order_id": null, "sentiment": "neutral"}, "tags": ["no_id"]}
+{"id": "T025", "input": "The size chart is confusing. Is M closer to a US S or M?", "expected": {"category": "product_question", "order_id": null, "sentiment": "negative"}, "tags": ["no_id"]}
+{"id": "T026", "input": "My card was charged twice for ORD-10789.", "expected": {"category": "payment_issue", "order_id": "ORD-10789", "sentiment": "negative"}, "tags": []}
+{"id": "T027", "input": "Payment failed at checkout but the money left my account. Order 11590?", "expected": {"category": "payment_issue", "order_id": "ORD-11590", "sentiment": "negative"}, "tags": ["id_format"]}
+{"id": "T028", "input": "Can I pay by bank transfer instead of card?", "expected": {"category": "payment_issue", "order_id": null, "sentiment": "neutral"}, "tags": ["no_id"]}
+{"id": "T029", "input": "I used a coupon but the discount wasn't applied to #12150.", "expected": {"category": "payment_issue", "order_id": "ORD-12150", "sentiment": "negative"}, "tags": ["id_format"]}
+{"id": "T030", "input": "Could you send me an invoice for ORD-10901? Thanks in advance!", "expected": {"category": "payment_issue", "order_id": "ORD-10901", "sentiment": "positive"}, "tags": []}
+{"id": "T031", "input": "Your delivery driver threw the box over the fence. Unacceptable. ORD-10666", "expected": {"category": "complaint", "order_id": "ORD-10666", "sentiment": "negative"}, "tags": []}
+{"id": "T032", "input": "Third time I'm writing about this and nobody answers. Terrible service.", "expected": {"category": "complaint", "order_id": null, "sentiment": "negative"}, "tags": ["no_id"]}
+{"id": "T033", "input": "The packaging for order 11777 was excessive, so much plastic. Please do better.", "expected": {"category": "complaint", "order_id": "ORD-11777", "sentiment": "negative"}, "tags": ["id_format"]}
+{"id": "T034", "input": "Your support agent was rude to me on the phone yesterday.", "expected": {"category": "complaint", "order_id": null, "sentiment": "negative"}, "tags": ["no_id"]}
+{"id": "T035", "input": "Honestly disappointed. The quality of ORD-12240 is nothing like the photos.", "expected": {"category": "complaint", "order_id": "ORD-12240", "sentiment": "negative"}, "tags": ["ambiguous"]}
+{"id": "T036", "input": "Order ORD-10380 arrived early and everything is perfect. Where can I leave a review?", "expected": {"category": "product_question", "order_id": "ORD-10380", "sentiment": "positive"}, "tags": ["ambiguous"]}
+{"id": "T037", "input": "I need to cancel #11888 and get a refund for the shipping fee too.", "expected": {"category": "cancel_order", "order_id": "ORD-11888", "sentiment": "neutral"}, "tags": ["ambiguous", "id_format"]}
+{"id": "T038", "input": "How long does shipping to Hokkaido usually take?", "expected": {"category": "order_status", "order_id": null, "sentiment": "neutral"}, "tags": ["no_id", "ambiguous"]}
+{"id": "T039", "input": "ORD-12301: the wrong colour was sent. I'd like the correct one shipped.", "expected": {"category": "return_refund", "order_id": "ORD-12301", "sentiment": "negative"}, "tags": ["ambiguous"]}
+{"id": "T040", "input": "Can you split ORD-10477 so the in-stock items ship now?", "expected": {"category": "order_status", "order_id": "ORD-10477", "sentiment": "neutral"}, "tags": ["ambiguous"]}

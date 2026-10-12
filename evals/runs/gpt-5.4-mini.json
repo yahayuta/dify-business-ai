@@ -1,0 +1,517 @@
+[
+ {
+  "id": "T001",
+  "status": "succeeded",
+  "outputs": {
+   "category": "order_status",
+   "order_id": "ORD-10234",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1594,
+  "total_tokens": 419
+ },
+ {
+  "id": "T002",
+  "status": "succeeded",
+  "outputs": {
+   "category": "order_status",
+   "order_id": "ORD-10871",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1411,
+  "total_tokens": 413
+ },
+ {
+  "id": "T003",
+  "status": "succeeded",
+  "outputs": {
+   "category": "order_status",
+   "order_id": "ORD-11002",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1742,
+  "total_tokens": 418
+ },
+ {
+  "id": "T004",
+  "status": "succeeded",
+  "outputs": {
+   "category": "order_status",
+   "order_id": "ORD-12210",
+   "sentiment": "positive",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1676,
+  "total_tokens": 416
+ },
+ {
+  "id": "T005",
+  "status": "succeeded",
+  "outputs": {
+   "category": "order_status",
+   "order_id": "ORD-10555",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1985,
+  "total_tokens": 417
+ },
+ {
+  "id": "T006",
+  "status": "succeeded",
+  "outputs": {
+   "category": "cancel_order",
+   "order_id": "ORD-10990",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1671,
+  "total_tokens": 414
+ },
+ {
+  "id": "T007",
+  "status": "succeeded",
+  "outputs": {
+   "category": "cancel_order",
+   "order_id": "ORD-11345",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1777,
+  "total_tokens": 418
+ },
+ {
+  "id": "T008",
+  "status": "succeeded",
+  "outputs": {
+   "category": "cancel_order",
+   "order_id": "ORD-12003",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1524,
+  "total_tokens": 417
+ },
+ {
+  "id": "T009",
+  "status": "succeeded",
+  "outputs": {
+   "category": "cancel_order",
+   "order_id": "",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1600,
+  "total_tokens": 412
+ },
+ {
+  "id": "T010",
+  "status": "succeeded",
+  "outputs": {
+   "category": "cancel_order",
+   "order_id": "ORD-10712",
+   "sentiment": "positive",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1384,
+  "total_tokens": 418
+ },
+ {
+  "id": "T011",
+  "status": "succeeded",
+  "outputs": {
+   "category": "return_refund",
+   "order_id": "ORD-10450",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1493,
+  "total_tokens": 418
+ },
+ {
+  "id": "T012",
+  "status": "succeeded",
+  "outputs": {
+   "category": "return_refund",
+   "order_id": "ORD-10877",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 2901,
+  "total_tokens": 420
+ },
+ {
+  "id": "T013",
+  "status": "succeeded",
+  "outputs": {
+   "category": "return_refund",
+   "order_id": "ORD-11230",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1591,
+  "total_tokens": 417
+ },
+ {
+  "id": "T014",
+  "status": "succeeded",
+  "outputs": {
+   "category": "return_refund",
+   "order_id": "ORD-12118",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 2001,
+  "total_tokens": 416
+ },
+ {
+  "id": "T015",
+  "status": "succeeded",
+  "outputs": {
+   "category": "product_question",
+   "order_id": "",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1390,
+  "total_tokens": 407
+ },
+ {
+  "id": "T016",
+  "status": "succeeded",
+  "outputs": {
+   "category": "address_change",
+   "order_id": "ORD-10333",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1373,
+  "total_tokens": 419
+ },
+ {
+  "id": "T017",
+  "status": "succeeded",
+  "outputs": {
+   "category": "address_change",
+   "order_id": "ORD-11456",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 2854,
+  "total_tokens": 419
+ },
+ {
+  "id": "T018",
+  "status": "succeeded",
+  "outputs": {
+   "category": "address_change",
+   "order_id": "ORD-12077",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1558,
+  "total_tokens": 416
+ },
+ {
+  "id": "T019",
+  "status": "succeeded",
+  "outputs": {
+   "category": "address_change",
+   "order_id": "",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1571,
+  "total_tokens": 414
+ },
+ {
+  "id": "T020",
+  "status": "succeeded",
+  "outputs": {
+   "category": "address_change",
+   "order_id": "ORD-10620",
+   "sentiment": "positive",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1676,
+  "total_tokens": 424
+ },
+ {
+  "id": "T021",
+  "status": "succeeded",
+  "outputs": {
+   "category": "product_question",
+   "order_id": "",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1722,
+  "total_tokens": 404
+ },
+ {
+  "id": "T022",
+  "status": "succeeded",
+  "outputs": {
+   "category": "product_question",
+   "order_id": "",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 2337,
+  "total_tokens": 413
+ },
+ {
+  "id": "T023",
+  "status": "succeeded",
+  "outputs": {
+   "category": "product_question",
+   "order_id": "",
+   "sentiment": "positive",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1384,
+  "total_tokens": 413
+ },
+ {
+  "id": "T024",
+  "status": "succeeded",
+  "outputs": {
+   "category": "product_question",
+   "order_id": "",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 2527,
+  "total_tokens": 408
+ },
+ {
+  "id": "T025",
+  "status": "succeeded",
+  "outputs": {
+   "category": "product_question",
+   "order_id": "",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1369,
+  "total_tokens": 414
+ },
+ {
+  "id": "T026",
+  "status": "succeeded",
+  "outputs": {
+   "category": "payment_issue",
+   "order_id": "ORD-10789",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1443,
+  "total_tokens": 412
+ },
+ {
+  "id": "T027",
+  "status": "succeeded",
+  "outputs": {
+   "category": "payment_issue",
+   "order_id": "ORD-11590",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1471,
+  "total_tokens": 417
+ },
+ {
+  "id": "T028",
+  "status": "succeeded",
+  "outputs": {
+   "category": "payment_issue",
+   "order_id": "",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 3866,
+  "total_tokens": 408
+ },
+ {
+  "id": "T029",
+  "status": "succeeded",
+  "outputs": {
+   "category": "payment_issue",
+   "order_id": "ORD-12150",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1993,
+  "total_tokens": 415
+ },
+ {
+  "id": "T030",
+  "status": "succeeded",
+  "outputs": {
+   "category": "order_status",
+   "order_id": "ORD-10901",
+   "sentiment": "positive",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1281,
+  "total_tokens": 417
+ },
+ {
+  "id": "T031",
+  "status": "succeeded",
+  "outputs": {
+   "category": "complaint",
+   "order_id": "ORD-10666",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1462,
+  "total_tokens": 418
+ },
+ {
+  "id": "T032",
+  "status": "succeeded",
+  "outputs": {
+   "category": "complaint",
+   "order_id": "",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1460,
+  "total_tokens": 412
+ },
+ {
+  "id": "T033",
+  "status": "succeeded",
+  "outputs": {
+   "category": "complaint",
+   "order_id": "ORD-11777",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1496,
+  "total_tokens": 419
+ },
+ {
+  "id": "T034",
+  "status": "succeeded",
+  "outputs": {
+   "category": "complaint",
+   "order_id": "",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1868,
+  "total_tokens": 410
+ },
+ {
+  "id": "T035",
+  "status": "succeeded",
+  "outputs": {
+   "category": "complaint",
+   "order_id": "ORD-12240",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1503,
+  "total_tokens": 417
+ },
+ {
+  "id": "T036",
+  "status": "succeeded",
+  "outputs": {
+   "category": "order_status",
+   "order_id": "ORD-10380",
+   "sentiment": "positive",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 3180,
+  "total_tokens": 420
+ },
+ {
+  "id": "T037",
+  "status": "succeeded",
+  "outputs": {
+   "category": "cancel_order",
+   "order_id": "ORD-11888",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 3054,
+  "total_tokens": 418
+ },
+ {
+  "id": "T038",
+  "status": "succeeded",
+  "outputs": {
+   "category": "order_status",
+   "order_id": "",
+   "sentiment": "neutral",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 1346,
+  "total_tokens": 409
+ },
+ {
+  "id": "T039",
+  "status": "succeeded",
+  "outputs": {
+   "category": "return_refund",
+   "order_id": "ORD-12301",
+   "sentiment": "negative",
+   "needs_review": false
+  },
+  "error": null,
+  "latency_ms": 2154,
+  "total_tokens": 420
+ },
+ {
+  "id": "T040",
+  "status": "failed",
+  "outputs": {},
+  "error": "Model quota has been exceeded (Dify Cloud trial credits)",
+  "latency_ms": null,
+  "total_tokens": null
+ }
+]

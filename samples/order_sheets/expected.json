@@ -1,0 +1,64 @@
+[
+  {
+    "file": "po_01_standard.pdf",
+    "po_number": "PO-2026-0412",
+    "lines": [
+      {
+        "sku": "MUG-BLU-01",
+        "quantity": 24,
+        "unit_price": 980
+      },
+      {
+        "sku": "MUG-RED-01",
+        "quantity": 12,
+        "unit_price": 980
+      },
+      {
+        "sku": "TWL-WHT-M",
+        "quantity": 30,
+        "unit_price": 1200
+      }
+    ],
+    "lines_total": 71280,
+    "stated_total": 71280,
+    "expect_review": false
+  },
+  {
+    "file": "po_02_total_mismatch.pdf",
+    "po_number": "TS-88120",
+    "lines": [
+      {
+        "sku": "CND-LAV-200",
+        "quantity": 40,
+        "unit_price": 1500
+      },
+      {
+        "sku": "CND-CIT-200",
+        "quantity": 40,
+        "unit_price": 1500
+      }
+    ],
+    "lines_total": 120000,
+    "stated_total": 125000,
+    "expect_review": true
+  },
+  {
+    "file": "po_03_fullwidth.pdf",
+    "po_number": "MH-0077",
+    "lines": [
+      {
+        "sku": "BTL-500",
+        "quantity": 18,
+        "unit_price": 2400
+      },
+      {
+        "sku": "BTL-750",
+        "quantity": 6,
+        "unit_price": 2800
+      }
+    ],
+    "lines_total": 60000,
+    "stated_total": 60000,
+    "expect_review": false
+  }
+]

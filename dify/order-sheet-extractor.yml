@@ -1,0 +1,306 @@
+app:
+  description: Read a supplier purchase order (PDF), extract the header and line items, check that the lines add up to the stated total, and return CSV rows ready to import. Anything that does not add up is flagged for a person to check.
+  icon: "🧾"
+  icon_background: '#FEF3C7'
+  icon_type: emoji
+  mode: workflow
+  name: order-sheet-extractor
+  use_icon_as_answer_icon: false
+dependencies: []
+kind: app
+version: 0.7.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload: {}
+    sensitive_word_avoidance:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        sourceType: start
+        targetType: document-extractor
+      id: start-extract
+      source: start
+      sourceHandle: source
+      target: extract_text
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: document-extractor
+        targetType: llm
+      id: extract-llm
+      source: extract_text
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: llm
+        targetType: code
+      id: llm-check
+      source: llm
+      sourceHandle: source
+      target: check
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: code
+        targetType: end
+      id: check-end
+      source: check
+      sourceHandle: source
+      target: end
+      targetHandle: target
+      type: custom
+    nodes:
+    - data:
+        title: Start
+        type: start
+        variables:
+        - label: order_sheet
+          variable: order_sheet
+          type: file
+          required: true
+          allowed_file_types:
+          - document
+          allowed_file_extensions: []
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+      id: start
+      position:
+        x: 80
+        y: 280
+      type: custom
+    - data:
+        title: Extract text
+        type: document-extractor
+        variable_selector:
+        - start
+        - order_sheet
+        is_array_file: false
+      id: extract_text
+      position:
+        x: 380
+        y: 280
+      type: custom
+    - data:
+        title: Read the order (LLM)
+        type: llm
+        model:
+          provider: langgenius/gemini/google
+          name: gemini-3.5-flash
+          mode: chat
+          completion_params: {}
+        context:
+          enabled: false
+          variable_selector: []
+        vision:
+          enabled: false
+        variables: []
+        prompt_template:
+        - id: system
+          role: system
+          edition_type: basic
+          text: |-
+            あなたは取引先から届いた注文書を読み取り、受注データに変換する担当者です。
+            注文書のテキストを読み、次のJSONオブジェクトを1つだけ返してください。説明文は不要です。
+
+            {
+              "buyer": "発注元の会社名",
+              "po_number": "注文番号（書かれているまま）",
+              "order_date": "注文日（書かれているまま）",
+              "delivery_date": "納品希望日（書かれているまま。なければ空文字）",
+              "lines": [
+                {"sku": "品番", "name": "品名", "quantity": 数量, "unit_price": 単価, "amount": 金額}
+              ],
+              "stated_total": 注文書に書かれた合計金額
+            }
+
+            ルール：
+            - 数値は数字だけで返す（カンマ・円・全角は使わない）。
+            - 注文書に書かれていない値を推測で埋めない。読めない値は null にする。
+            - 合計が明細と合わなくても、注文書に書かれた合計をそのまま stated_total に入れる（検算は後の工程で行う）。
+        - id: user
+          role: user
+          edition_type: basic
+          text: |-
+            注文書のテキスト：
+            {{#extract_text.text#}}
+      id: llm
+      position:
+        x: 680
+        y: 280
+      type: custom
+    - data:
+        title: Check totals and build CSV
+        type: code
+        code_language: python3
+        code: |
+          import csv
+          import io
+          import json
+          import re
+          import unicodedata
+
+
+          def _parse(text):
+              text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text.strip())
+              try:
+                  return json.loads(text)
+              except ValueError:
+                  start, end = text.find("{"), text.rfind("}")
+                  if start == -1 or end <= start:
+                      return None
+                  try:
+                      return json.loads(text[start:end + 1])
+                  except ValueError:
+                      return None
+
+
+          def _norm(value):
+              return unicodedata.normalize("NFKC", str(value or "")).strip()
+
+
+          def _int(value):
+              digits = re.sub(r"[^\d-]", "", _norm(value))
+              return int(digits) if digits not in ("", "-") else None
+
+
+          def main(llm_text: str, source_text: str) -> dict:
+              issues = []
+              data = _parse(llm_text)
+              if not isinstance(data, dict):
+                  return {"po_number": "", "buyer": "", "line_count": 0, "lines_total": 0,
+                          "stated_total": 0, "csv": "", "lines_json": "[]", "needs_review": True,
+                          "issues": "LLM output was not a JSON object"}
+
+              po_number = _norm(data.get("po_number"))
+              buyer = _norm(data.get("buyer"))
+              rows, lines_total = [], 0
+              for i, line in enumerate(data.get("lines") or [], start=1):
+                  sku = _norm(line.get("sku"))
+                  qty, price, amount = _int(line.get("quantity")), _int(line.get("unit_price")), _int(line.get("amount"))
+                  if not sku or qty is None or price is None:
+                      issues.append(f"line {i}: missing sku, quantity or unit price")
+                      continue
+                  # The SKU must really be on the sheet (guards against invented lines).
+                  if sku not in _norm(source_text):
+                      issues.append(f"line {i}: sku {sku} not found in the document")
+                  if amount is not None and amount != qty * price:
+                      issues.append(f"line {i}: amount {amount} != {qty} x {price}")
+                  lines_total += qty * price
+                  rows.append({"po_number": po_number, "line_no": i, "sku": sku,
+                               "name": _norm(line.get("name")), "quantity": qty, "unit_price": price,
+                               "amount": qty * price})
+
+              stated = _int(data.get("stated_total"))
+              if not rows:
+                  issues.append("no order lines found")
+              if stated is None:
+                  issues.append("stated total not found")
+              elif stated != lines_total:
+                  issues.append(f"lines add up to {lines_total:,} but the sheet says {stated:,}")
+
+              out = io.StringIO()
+              writer = csv.DictWriter(out, fieldnames=["po_number", "line_no", "sku", "name", "quantity", "unit_price", "amount"])
+              writer.writeheader()
+              writer.writerows(rows)
+
+              return {"po_number": po_number, "buyer": buyer, "line_count": len(rows),
+                      "lines_total": lines_total, "stated_total": stated or 0, "csv": out.getvalue(),
+                      "lines_json": json.dumps(rows, ensure_ascii=False), "needs_review": bool(issues),
+                      "issues": "; ".join(issues)}
+        variables:
+        - variable: llm_text
+          value_selector:
+          - llm
+          - text
+        - variable: source_text
+          value_selector:
+          - extract_text
+          - text
+        outputs:
+          po_number:
+            type: string
+            children: null
+          buyer:
+            type: string
+            children: null
+          line_count:
+            type: number
+            children: null
+          lines_total:
+            type: number
+            children: null
+          stated_total:
+            type: number
+            children: null
+          csv:
+            type: string
+            children: null
+          lines_json:
+            type: string
+            children: null
+          needs_review:
+            type: boolean
+            children: null
+          issues:
+            type: string
+            children: null
+      id: check
+      position:
+        x: 980
+        y: 280
+      type: custom
+    - data:
+        title: End
+        type: end
+        outputs:
+        - variable: po_number
+          value_selector:
+          - check
+          - po_number
+        - variable: buyer
+          value_selector:
+          - check
+          - buyer
+        - variable: line_count
+          value_selector:
+          - check
+          - line_count
+        - variable: lines_total
+          value_selector:
+          - check
+          - lines_total
+        - variable: stated_total
+          value_selector:
+          - check
+          - stated_total
+        - variable: csv
+          value_selector:
+          - check
+          - csv
+        - variable: needs_review
+          value_selector:
+          - check
+          - needs_review
+        - variable: issues
+          value_selector:
+          - check
+          - issues
+      id: end
+      position:
+        x: 1280
+        y: 280
+      type: custom
+    viewport:
+      x: 0
+      y: 0
+      zoom: 0.7

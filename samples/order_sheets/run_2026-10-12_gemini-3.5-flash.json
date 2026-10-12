@@ -1,0 +1,5 @@
+[
+ {"file": "po_01_standard.pdf", "status": "succeeded", "elapsed_ms": 4403, "po_number": "PO-2026-0412", "line_count": 3, "lines_total": 71280, "stated_total": 71280, "needs_review": false, "issues": "", "matches_expected": true},
+ {"file": "po_02_total_mismatch.pdf", "status": "succeeded", "elapsed_ms": 6215, "po_number": "TS-88120", "line_count": 2, "lines_total": 120000, "stated_total": 125000, "needs_review": true, "issues": "lines add up to 120,000 but the sheet says 125,000", "matches_expected": true},
+ {"file": "po_03_fullwidth.pdf", "status": "succeeded", "elapsed_ms": 7397, "po_number": "MH-0077", "line_count": 2, "lines_total": 60000, "stated_total": 60000, "needs_review": false, "issues": "", "matches_expected": true}
+]
